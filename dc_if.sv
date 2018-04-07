@@ -213,7 +213,7 @@ module dc_if (
                         .IO_DC_DATA   ( IO_DC_DATA ), // Data Bus (bidir)
                         .I_DC_INT1    ( I_DC_INT1  ), // Interrupt 1, from Device Controller
                         // Bus Interface Control
-                        .I_START      ( start  ), // Start transfer on Bus Interface
+                        .I_START      ( start      ), // Start transfer on Bus Interface
                         .I_WRITE      ( write      ), // Write data on Bus Interface
                         .I_READ       ( read       ), // Read data on Bus Interface
                         .I_DWORD      ( dword      ), // Read double word from device
