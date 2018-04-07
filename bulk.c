@@ -113,45 +113,6 @@ int main(int argc, char **argv)
       fprintf(stderr, "Miscompare: block %d\n", l);
   }
 
-  // write data (~537.063 kB/sec), double-buffer should add twice the speed
-  //len = write_chars(buf, sizeof(buf));
-  //fprintf(stdout, "Sent: ");
-  //for (i = 0; i < len; i++)
-  //{
-  //  fprintf(stdout, "%02X ", buf[i]);
-  //}
-  //fprintf(stdout, "(%d bytes)", len);
-  //fprintf(stdout, "\n");
-
-  // read data
-  //len = read_chars(buf, sizeof(buf));
-  //fprintf(stdout, "Received: ");
-  //for (i = 0; i < len; i++)
-  //{
-  //  fprintf(stdout, "%02X ", buf[i]);
-  //}
-  //fprintf(stdout, "(%d bytes)", len);
-  //fprintf(stdout, "\n");
-
-  //for (j = 0; j < 65536; j++)
-  //{
-  //  buf[0] = j & 0xFF;
-  //  buf[1] = (j >> 8) & 0xFF;
-  //
-  //  len = write_chars(buf, sizeof(buf));
-  //  fprintf(stdout, "Sent: %d bytes.\n", len);
-  //
-  //  len = read_chars(buf, sizeof(buf));
-  //  fprintf(stdout, "Received: ");
-  //  for (i = 0; i < len; i++)
-  //  {
-  //    fprintf(stdout, "%02X ", buf[i]);
-  //  }
-  //  fprintf(stdout, "\n");
-  //}
-
-  //sleep(1);
-
   libusb_release_interface(devh, 0);
 
 out:
