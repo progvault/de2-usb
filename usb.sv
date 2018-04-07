@@ -35,16 +35,17 @@ module usb (
         output        O_DC_DACK1F        // DMA Acknowledge 1 (unused)
         );
 
-   wire [31:0] rdata;
-   reg  [24:0] led_cnt;
-   reg  [15:0] chip_id;
-   reg  [15:0] scratch;
-   wire [15:0] intr;
-   wire [31:0] debug;
-   reg         dc_data_rdy;
-   reg         dc_done;
-   reg         lcd_done;
-   reg         dc_int1;
+   logic [64:0][15:0] dc_data;
+   wire  [31:0] rdata;
+   reg   [24:0] led_cnt;
+   reg   [15:0] chip_id;
+   reg   [15:0] scratch;
+   wire  [15:0] intr;
+   wire  [31:0] debug;
+   reg          dc_data_rdy;
+   reg          dc_done;
+   reg          lcd_done;
+   reg          dc_int1;
 
    assign dc_int1 = I_DC_INT1;
 
@@ -65,8 +66,11 @@ module usb (
                     .O_DC_WRF   ( O_DC_WRF    ),  // Write Strobe
                     .IO_DC_DATA ( IO_DC_DATA  ),  // Data Bus (bidir)
                     .I_DC_INT1  ( dc_int1     ),  // Interrupt 1, from Device Controller
-                    .O_RDATA    ( rdata       ),  // Read Data
+                    .I_DATA_RDY ( dc_data_rdy ),  // Data Ready to USB
+                    .I_DATA     ( dc_data     ),  // Bulk Endpoint IN Data (loopback)
                     .O_DATA_RDY ( dc_data_rdy ),  // Data Ready from USB
+                    .O_DATA     ( dc_data     ),  // Bulk Endpoint OUT Data
+                    .O_RDATA    ( rdata       ),  // Read Data
                     .O_DONE     ( dc_done     )   // DC Done
                     );
 
@@ -80,7 +84,7 @@ module usb (
                     .O_LCD_RS   ( O_LCD_RS    ), // Register select, 0 = Command, 1 = Data
                     .O_LCD_RWF  ( O_LCD_RWF   ), // Read Write select, 0 = Write, 1 = Read
                     .O_LCD_DATA ( O_LCD_DATA  ),
-                    .I_START    ( dc_data_rdy ), // was 'dc_done'
+                    .I_START    ( dc_data_rdy ),
                     .I_REG_DATA ( debug       ), // Register Data
                     .O_DONE     ( lcd_done    )
                     );
