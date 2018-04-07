@@ -7,13 +7,13 @@ module dc_if (
                output [15:0]       O_CHIP_ID,  // Chip ID
                output [15:0]       O_SCRATCH,  // Scratch content
                output [15:0]       O_INTR,     // Interrupt Register
-               output [31:0]       O_DEBUG,    // Interrupt Register
                input               I_DATA_RDY, // Data Ready to USB
                input  [64:0][15:0] I_DATA,     // Bulk Endpoint IN Data
                output              O_DATA_RDY, // Data Ready from USB
                output [64:0][15:0] O_DATA,     // Bulk Endpoint OUT Data
                output [31:0]       O_RDATA,    // Read Data from Bus Interface (scratch and chip id)
-               output              O_DONE
+               output [31:0]       O_DEBUG,    // Debug Data
+               output              O_DONE,     // Done
                // Bus Interface
                output              O_DC_RSTF,  // Reset the Device Controller (~800ns)
                output [ 1:0]       O_DC_ADDR,  // Address Bus, [1] = PIO bus of HC (0) or DC (1), [0] = command (1) or data (0) port
@@ -21,7 +21,7 @@ module dc_if (
                output              O_DC_RDF,   // Read Strobe
                output              O_DC_WRF,   // Write Strobe
                inout  [15:0]       IO_DC_DATA, // Data Bus (bidir)
-               input               I_DC_INT1,  // Interrupt 1, from Device Controller
+               input               I_DC_INT1   // Interrupt 1, from Device Controller
               );
 
 `include "d13_parameters.svh"
