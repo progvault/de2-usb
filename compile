@@ -1,0 +1,9 @@
+vlog -sv d13_pkg.sv
+vlog -sv bin2ascii.sv
+vlog -sv dc_bus_if.sv
+vlog -sv dc_if.sv
+vlog -sv lcd_bus_if.sv
+vlog -sv lcd_if.sv
+vlog -sv sseg.sv
+vlog -sv usb.sv
+vlog -sv tb_usb.sv
