@@ -24,11 +24,11 @@ module lcd_bus_if (
 
 
    parameter  TDLY    = {12{1'b1}};  //~82 us delay
-   parameter  FSET_TC = 6; // function set terminal count (6)
-   parameter  BYTE_TC = {4{1'b1}}; // byte terminal count (16), 4-bits of all ones
+   parameter  FSET_TC = 6;           // function set terminal count (6)
+   parameter  BYTE_TC = {4{1'b1}};   // byte terminal count (16), 4-bits of all ones
 
    typedef enum {IDLE, INIT, WAIT_START, LINE0, WRITE0, LINE1, WRITE1, DONE} bus_trans_t;
-   bus_trans_t st; // state
+   bus_trans_t st;
 
    reg        wdone;
    reg        edone, edone1, edone_re;
