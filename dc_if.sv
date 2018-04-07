@@ -297,7 +297,7 @@ module dc_if (
 
         case (st)
           /*
-           Reset Hardware sub-routine
+           Hardware Reset sub-routine
           */
           RST: begin
              dc_rstf <= rst_cnt[6] | rst_cnt[7];  // drive RESET_F low then high, this is REQUIRED to drive internal POR of device.
