@@ -111,7 +111,7 @@ module dc_bus_if (
                 st   <= TDLY;
                 if (I_REGISTER.words == 0)
                   rt <= DONE;
-                if (I_READ)
+                else if (I_READ)
                   rt <= RD;
                 else if (I_WRITE)
                   rt <= WR;
