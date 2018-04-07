@@ -636,7 +636,7 @@ module dc_if (
           /*
            Setup Request Packet sub-routine
           */
-          SETUP_REQUEST: begin   // TODO: clean this up.  Doesn't look right
+          SETUP_REQUEST: begin   // TODO: Minor cleanup
              requestType  <= register_o.data[1][6:5];
              requestNum   <= register_o.data[1][15:8];
              wValue       <= register_o.data[2];
