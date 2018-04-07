@@ -23,7 +23,7 @@ module lcd_bus_if (
    const logic [0:6][7:0] icode = {8'h38, 8'h38, 8'h38, 8'h38, 8'h0F, 8'h01, 8'h06};
 
 
-   parameter  TDLY    = {12{1'b1}};  //~82 us delay
+   parameter  TDLY    = {12{1'b1}};  // ~82 us delay
    parameter  FSET_TC = 6;           // function set terminal count (6)
    parameter  BYTE_TC = {4{1'b1}};   // byte terminal count (16), 4-bits of all ones
 
@@ -35,15 +35,15 @@ module lcd_bus_if (
    reg        done;
    reg [21:0] wcnt;     // wait delay (>40 ms)
    reg [11:0] dcnt;     // instruction delay (~82 us)
-   reg  [5:0] ecnt;     // enable delay (~1us)
-   reg  [2:0] fcnt;     // function set count
-   reg  [3:0] bcnt;     // byte count
+   reg [ 5:0] ecnt;     // enable delay (~1us)
+   reg [ 2:0] fcnt;     // function set count
+   reg [ 3:0] bcnt;     // byte count
    reg        ecnt_ld;
    reg        ecnt_en;
    reg        lcd_en1, lcd_en2;
    reg        lcd_rs;
    reg        lcd_rwf;
-   reg  [7:0] lcd_data;
+   reg [ 7:0] lcd_data;
 
    // intialization wait (>40 ms after a POR or system reset)
    always @ (posedge I_CLK or negedge I_RSTF)
