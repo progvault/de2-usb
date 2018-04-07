@@ -1,25 +1,27 @@
 import d13_pkg::*;
-
 module dc_if (
                // System Interface
-               input         I_CLK,      // Clock 50 MHz
-               input         I_RSTF,     // Reset (active low)
-               input         I_START,    // Start Test
-               output [15:0] O_CHIP_ID,  // Chip ID
-               output [15:0] O_SCRATCH,  // Scratch content
-               output [15:0] O_INTR,     // Interrupt Register
-               output [31:0] O_DEBUG,    // Interrupt Register
+               input               I_CLK,      // Clock 50 MHz
+               input               I_RSTF,     // Reset (active low)
+               input               I_START,    // Start Test
+               output [15:0]       O_CHIP_ID,  // Chip ID
+               output [15:0]       O_SCRATCH,  // Scratch content
+               output [15:0]       O_INTR,     // Interrupt Register
+               output [31:0]       O_DEBUG,    // Interrupt Register
                // Bus Interface
-               output        O_DC_RSTF,  // Reset the Device Controller (~800ns)
-               output [ 1:0] O_DC_ADDR,  // Address Bus, [1] = PIO bus of HC (0) or DC (1), [0] = command (1) or data (0) port
-               output        O_DC_CSF,   // Chip Select
-               output        O_DC_RDF,   // Read Strobe
-               output        O_DC_WRF,   // Write Strobe
-               inout  [15:0] IO_DC_DATA, // Data Bus (bidir)
-               input         I_DC_INT1,  // Interrupt 1, from Device Controller
-               output [31:0] O_RDATA,    // Read Data from Bus Interface
-               output        O_DATA_RDY, // Data ready from USB
-               output        O_DONE
+               output              O_DC_RSTF,  // Reset the Device Controller (~800ns)
+               output [ 1:0]       O_DC_ADDR,  // Address Bus, [1] = PIO bus of HC (0) or DC (1), [0] = command (1) or data (0) port
+               output              O_DC_CSF,   // Chip Select
+               output              O_DC_RDF,   // Read Strobe
+               output              O_DC_WRF,   // Write Strobe
+               inout  [15:0]       IO_DC_DATA, // Data Bus (bidir)
+               input               I_DC_INT1,  // Interrupt 1, from Device Controller
+               input               I_DATA_RDY, // Data Ready to USB
+               input  [64:0][15:0] I_DATA,     // Bulk Endpoint IN Data
+               output              O_DATA_RDY, // Data Ready from USB
+               output [64:0][15:0] O_DATA,     // Bulk Endpoint OUT Data
+               output [31:0]       O_RDATA,    // Read Data from Bus Interface (scratch and chip id)
+               output              O_DONE
               );
 
 `include "d13_parameters.svh"
@@ -161,7 +163,9 @@ module dc_if (
    bus_trans_t st; // state
    bus_trans_t rt; // return state
 
-   logic [0:63][15:0] wbuff, dcrbuff; // add rbuff (read buffer) for double-buffering
+   // buffers
+   logic [64:0][15:0] wbuff;
+   logic [64:0][15:0] rbuff, dcrbuff;
 
    // registers
    reg         start_meta;
@@ -193,7 +197,7 @@ module dc_if (
    reg  [15:0] wIndex;
    reg  [15:0] wLength;
    reg         arm;
-   reg         lcd;
+   reg         ordy;
    reg [63:0][15:0] rbuf; // read buffer
 
 
@@ -278,7 +282,7 @@ module dc_if (
         wValue      <= 0;
         wIndex      <= 0;
         wLength     <= 0;
-        lcd         <= 0;
+        ordy        <= 0;
         rbuf        <= 0;
         register    <= 0;
         done        <= 0;
@@ -292,7 +296,7 @@ module dc_if (
         burst       <= 0;
         dc_rstf     <= 1;
         rst_clr     <= 0;
-        lcd         <= 0;
+        ordy        <= 0;
         done        <= 0;
 
         case (st)
@@ -549,7 +553,7 @@ module dc_if (
              if (bus_done) begin
                 start <= 0;
                 if (register_o.data[0] == 0) begin // handshake (emtpy packet)
-                   //lcd   <= 1;
+                   //ordy  <= 1;
                    //debug <= {intr[15:0], ep0ostat};
                    st <= rt;
                 end
@@ -581,6 +585,7 @@ module dc_if (
              start    <= 1;
              if (bus_done) begin
                 start <= 0;
+                rbuff <= register_o.data;
                 st    <= EP1_FIFO_CLR;
              end
           end
@@ -592,6 +597,8 @@ module dc_if (
              start    <= 1;
              if (bus_done) begin
                 start <= 0;
+                ordy  <= 1;
+                debug <= {rbuff[1], {10'b0, words}};
                 st    <= EP1_FIFO_WR;
              end
           end
@@ -599,13 +606,11 @@ module dc_if (
            Write EP1 (Bulk) IN Buffer
           */
           EP1_FIFO_WR: begin
-             register  <= '{DC_WEP1IN_BUFF, register_o.data, words}; // loopback buffer size + packet data.
+             register  <= '{DC_WEP1IN_BUFF, rbuff, words}; // loopback buffer size + packet data.
              write     <= 1;
              start     <= 1;
              if (bus_done) begin
                 start  <= 0;
-                lcd    <= 1;
-                debug  <= {register_o.data[1], {10'b0, words}};
                 st     <= EP1_FIFO_VALID;
              end
           end
@@ -750,7 +755,7 @@ module dc_if (
              start    <= 1;
              if (bus_done) begin
                 start <= 0;
-                lcd   <= 1;
+                ordy  <= 1;
                 debug <= {requestNum, wValue};
                 st    <= DONE;
              end
@@ -800,7 +805,7 @@ module dc_if (
    assign O_INTR     = intr;
    assign O_DEBUG    = debug;
    assign O_RDATA    = {scratch, chip_id};
-   assign O_DATA_RDY = lcd;
+   assign O_DATA_RDY = ordy;
    assign O_DONE     = done;
    assign O_DC_RSTF  = dc_rstf;
 
