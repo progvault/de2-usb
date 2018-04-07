@@ -342,7 +342,7 @@ module dc_if (
            Bus Reset sub-routine
           */
           BUS_RESET: begin
-             register <= '{DC_DEV_UNLOCK, 16'hAA37, 1}; // unlock device as mentioned online (twice or may not be needed)
+             register <= '{DC_DEV_UNLOCK, 16'hAA37, 1}; // unlock device as mentioned in datasheet
              write    <= 1;
              start    <= 1;
              if (bus_done) begin
