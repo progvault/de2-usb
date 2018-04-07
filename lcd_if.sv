@@ -14,13 +14,12 @@ module lcd_if (
                    output       O_DONE
                    );
 
-   //                                        111111
+   // Position                               111111
    //                              0123456789012345
    logic [0:15][7:0] lcd_line1  = "Register Data   ";
    logic [0:15][7:0] lcd_line2;
-   //logic [0:15][7:0] lcd_line2  = "string2         ";
 
-   typedef enum {IDLE, WR_ID0, WR_ID1, DONE} bus_trans_t;
+   typedef enum {IDLE, WR0, WR1, DONE} bus_trans_t;
    bus_trans_t st; // state
 
 
@@ -81,9 +80,9 @@ module lcd_if (
         case(st)
           IDLE: begin
              if (I_START)
-               st <= WR_ID0;
+               st <= WR0;
           end
-          WR_ID0: begin
+          WR0: begin
              lcd_line2[7] <= hex0[7:0];
              lcd_line2[6] <= hex0[15:8];
              lcd_line2[5] <= hex0[23:16];
@@ -92,9 +91,9 @@ module lcd_if (
              lcd_line2[2] <= hex1[15:8];
              lcd_line2[1] <= hex1[23:16];
              lcd_line2[0] <= hex1[31:24];
-             st <= WR_ID1;
+             st <= WR1;
           end
-          WR_ID1: begin
+          WR1: begin
              lcd_start <= 1;
              st        <= DONE;
           end
