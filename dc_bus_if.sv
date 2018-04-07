@@ -21,8 +21,8 @@ module dc_bus_if (
                   input  [ 7:0]       I_ADDR,     // Address to write to Bus Interface
                   input  [31:0]       I_WDATA,    // Data to write to Bus Interface
                   output [31:0]       O_RDATA,    // Data read from Bus Interface
-                  input  [0:63][15:0] I_WBUFF,    // Data to write to Bust Interface
-                  output [0:63][15:0] O_RBUFF,    // Data read from Bust Interface Read Buffer
+                  input  [64:0][15:0] I_WBUFF,    // Data to write to Bust Interface
+                  output [64:0][15:0] O_RBUFF,    // Data read from Bust Interface Read Buffer
                   input  register_t   I_REGISTER,
                   output oregister_t  O_REGISTER,
                   output              O_DONE      // Done with current task
@@ -35,8 +35,8 @@ module dc_bus_if (
 
    register_t r;
 
-   logic [0:63][15:0] rbuff;
-   logic [0:63][15:0] wbuff;
+   logic [64:0][15:0] rbuff;
+   logic [64:0][15:0] wbuff;
 
    reg addr0;
    reg csn;
