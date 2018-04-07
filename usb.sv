@@ -57,13 +57,12 @@ module usb (
                     .O_CHIP_ID  ( chip_id     ),
                     .O_SCRATCH  ( scratch     ),
                     .O_INTR     ( intr        ),
-                    .O_DEBUG    ( debug       ),
-                    .I_DC_INT1  ( dc_int1     ),  // Interrupt 1, from Device Controller
                     .I_DATA_RDY ( dc_data_rdy ),  // Data Ready to USB
                     .I_DATA     ( dc_data     ),  // Bulk Endpoint IN Data (loopback)
                     .O_DATA_RDY ( dc_data_rdy ),  // Data Ready from USB
                     .O_DATA     ( dc_data     ),  // Bulk Endpoint OUT Data
                     .O_RDATA    ( rdata       ),  // Read Data
+                    .O_DEBUG    ( debug       ),
                     .O_DONE     ( dc_done     ),  // DC Done
                     // Bus Interface
                     .O_DC_RSTF  ( O_DC_RSTF   ),  // Reset the Device Controller (~800ns)
@@ -71,7 +70,8 @@ module usb (
                     .O_DC_CSF   ( O_DC_CSF    ),  // Chip Select
                     .O_DC_RDF   ( O_DC_RDF    ),  // Read Strobe
                     .O_DC_WRF   ( O_DC_WRF    ),  // Write Strobe
-                    .IO_DC_DATA ( IO_DC_DATA  )  // Data Bus (bidir)
+                    .IO_DC_DATA ( IO_DC_DATA  ),  // Data Bus (bidir)
+                    .I_DC_INT1  ( dc_int1     )   // Interrupt 1, from Device Controller
                     );
 
    lcd_if u_lcd_if (
