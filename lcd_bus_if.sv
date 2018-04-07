@@ -24,13 +24,8 @@ module lcd_bus_if (
 
 
    parameter  TDLY    = {12{1'b1}};  //~82 us delay
-   //parameter  TDLY    = {18{1'b1}};   // ~4.1 ms delay
-   //parameter  TDLY    = {10{1'b1}};   // simulation
-   //parameter  TDLY    = '1; // ONE BIT of 1'b1
    parameter  FSET_TC = 6; // function set terminal count (6)
-   //parameter  FSET_TC = { 3{1'b1}}; // function set terminal count, 3-bits of all ones
    parameter  BYTE_TC = {4{1'b1}}; // byte terminal count (16), 4-bits of all ones
-   //parameter  BYTE_TC = 15; // byte terminal count (16), 4-bits of all ones
 
    typedef enum {IDLE, INIT, WAIT_START, LINE0, WRITE0, LINE1, WRITE1, DONE} bus_trans_t;
    bus_trans_t st; // state
@@ -40,8 +35,6 @@ module lcd_bus_if (
    reg        done;
    reg [21:0] wcnt;     // wait delay (>40 ms)
    reg [11:0] dcnt;     // instruction delay (~82 us)
-   //reg [17:0] dcnt;     // instruction delay (~4.1ms)
-   //reg  [9:0] dcnt;     // simulation
    reg  [5:0] ecnt;     // enable delay (~1us)
    reg  [2:0] fcnt;     // function set count
    reg  [3:0] bcnt;     // byte count
@@ -59,7 +52,6 @@ module lcd_bus_if (
         wcnt  <= 0;
      end
      else begin
-        //if (wcnt[10]) // simulation
         if (wcnt[21])
           wdone <= 1;
         else
