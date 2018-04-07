@@ -342,7 +342,7 @@ module dc_if (
            Bus Reset sub-routine
           */
           BUS_RESET: begin
-             register <= '{DC_DEV_UNLOCK, 16'hAA37, 1}; // unlock device as mentioned in datasheet
+             register <= '{DC_DEV_UNLOCK, 16'hAA37, 1}; // unlock device as mentioned online and in datasheet
              write    <= 1;
              start    <= 1;
              if (bus_done) begin
@@ -425,7 +425,7 @@ module dc_if (
              if (intr[0] == 1) begin           // Bus Reset condition
                 st     <= BUS_RESET;
              end
-             //if (intr[1] == 1) begin           // Suspend condition (enable in HW!!!!)
+             //if (intr[1] == 1) begin           // Suspend condition (enable in HW)
              //   st     <= SUSPEND;
              //end
              else if (intr[9] == 1) begin      // EP0IN (Control IN Endpoint) RESEND?? MALFORMED PACKET?
@@ -730,7 +730,7 @@ module dc_if (
              end
           end
           SET_CFG: begin  // Set Configuration
-                          // Done!! Send zero length. The user determines the configuration value from the Setup Packet.
+                          // Done! Send zero length. The user determines the configuration value from the Setup Packet.
                           // If the value is zero, the user must clear the configuration flag in its memory and disable the endpoint
                           // If the value is one, the user must set the configuration flag.  Once set, the user must send the zero-data packet
                           // at the acknowledgement phase.
