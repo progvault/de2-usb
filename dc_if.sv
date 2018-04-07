@@ -806,6 +806,7 @@ module dc_if (
    assign O_DEBUG    = debug;
    assign O_RDATA    = {scratch, chip_id};
    assign O_DATA_RDY = ordy;
+   assign O_DATA     = rbuff;
    assign O_DONE     = done;
    assign O_DC_RSTF  = dc_rstf;
 
