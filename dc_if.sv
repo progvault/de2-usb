@@ -319,7 +319,7 @@ module dc_if (
              read         <= 1;
              start        <= 1;
              if (bus_done) begin
-                start     <= 0;;
+                start     <= 0;
                 st        <= SCRATCH_WR;
              end
           end
