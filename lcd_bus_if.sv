@@ -31,7 +31,6 @@ module lcd_bus_if (
    bus_trans_t st;
 
    reg        wdone;
-   reg        edone, edone1, edone_re;
    reg        done;
    reg [21:0] wcnt;     // wait delay (>40 ms)
    reg [11:0] dcnt;     // instruction delay (~82 us)
@@ -61,29 +60,17 @@ module lcd_bus_if (
    // enable cycle (>1us)
    always @ (posedge I_CLK or negedge I_RSTF)
      if (~I_RSTF) begin
-        edone    <= 0;
-        edone1   <= 0;
-        edone_re <= 0;
         ecnt     <= '1;
         lcd_en1  <= 1;
         lcd_en2  <= 1;
      end
      else begin
 
-        //default
-        edone <= 0;
-
         // enable counter
         if (ecnt_ld || ~wdone)
            ecnt  <= '1;
-        else if (ecnt == 0)
-           edone <= 1;  // enable cycle done
         else if (ecnt_en)
            ecnt  <= ecnt - 1;
-
-        // rising edge detect
-        edone1   <= edone;
-        edone_re <= !edone1 & edone;
 
         // lcd_en
         lcd_en1 <= ecnt[5];
