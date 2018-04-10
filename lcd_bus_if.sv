@@ -68,9 +68,11 @@ module lcd_bus_if (
 
         // enable counter
         if (ecnt_ld || ~wdone)
-           ecnt  <= '1;
+          ecnt <= '1;
+        else if (ecnt == 0)
+          ecnt <= ecnt;
         else if (ecnt_en)
-           ecnt  <= ecnt - 1;
+          ecnt <= ecnt - 1;
 
         // lcd_en
         lcd_en1 <= ecnt[5];
