@@ -304,9 +304,9 @@ module dc_if (
            Hardware Reset sub-routine
           */
           RST: begin
-             dc_rstf <= rst_cnt[6] | rst_cnt[7];  // drive RESET_F low then high, this is REQUIRED to drive internal POR of device.
+             dc_rstf <= |rst_cnt[7:6];  // drive RESET_F low then high, this is REQUIRED to drive internal POR of device.
              if (rst_cnt[7]) begin                // reset 800ns.  Able to read chip id after 800ns.
-                st <= IDLE;
+                st   <= IDLE;
              end
           end
           IDLE: begin
